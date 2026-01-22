@@ -170,6 +170,10 @@ Solana 基金会开发者及生态资深导师授课，每周 Office Hour 现场
    ...
 4. 提交 Pull Request 合并到本 repo finalProject 文件夹
 
+**在 task 1-4 或 完成毕业设计并提交 中完成一个即算满足毕业条件**
+**参加 Solana 华语 Vibe Coding 黑客松并提交可直接毕业 https://x.com/trendsdotfun/status/2013570113430265869**
+
+
 ### 填写毕业问卷
 
 完成任务后，请填写毕业问卷：[https://forms.gle/JeLiYUYfgZwAJUf16](https://forms.gle/JeLiYUYfgZwAJUf16)
@@ -181,6 +185,8 @@ Solana 基金会开发者及生态资深导师授课，每周 Office Hour 现场
 - **完成 Task 1 - Task 6 中的任意 4 个**即算毕业
 - 毕业可获得 **Solana Bootcamp NFT** 及 **Solana 生态项目空投**
 - 完成**毕业设计并参加 Solana 黑客松**可获得额外丰厚**奖学金奖励**
+- SafePal 与 Solana，Solar 联名**硬件钱包一个**
+- 免费获得**Accelerate HK 价值$99参会门票一张**
 
 ## 🤝 参与方式
 
