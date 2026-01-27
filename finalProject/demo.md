@@ -1,6 +1,6 @@
-<img width="2816" height="1536" alt="image" src="https://github.com/user-attachments/assets/893b8d5a-896e-4b86-b2ae-29dd71f0aad5" /># 项目名称
+# Sol-Green 环保奖励平台
 
-> Sol-Green 环保奖励平台
+项目名称 : Sol-Green 环保奖励平台
 
 ## 💻 项目 Repo
 
@@ -24,6 +24,8 @@ AI检测：百度AI、阿里云、AWS、Google Cloud
 工具：Solana CLI, @solana/web3.js
 
 ### 演示链接 及 功能截图
+<img width="2816" height="1536" alt="image" src="https://github.com/user-attachments/assets/893b8d5a-896e-4b86-b2ae-29dd71f0aad5" />
+演示链接
 - https://github.com/tatehu/Solana-bootcamp-2026-s1-finalProject/blob/dev/PROJECT_INTRO_CN.md
 
 ## 💡 核心功能
