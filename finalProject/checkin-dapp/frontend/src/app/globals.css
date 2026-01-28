@@ -1,0 +1,32 @@
+@import "@solana/wallet-adapter-react-ui/styles.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground-rgb: 45, 52, 54;
+  --background-start-rgb: 253, 251, 247;
+  --background-end-rgb: 253, 251, 247;
+}
+
+body {
+  color: #2D3436;
+  background: #FDFBF7;
+  /* 优先使用圆润的字体 */
+  font-family: "Varela Round", "Nunito", "Quicksand", "Comic Sans MS", "Chalkboard SE", system-ui, -apple-system, sans-serif;
+}
+
+/* 简单的背景图案 */
+.bg-dots {
+  background-image: radial-gradient(#FFD93D 15%, transparent 16%), radial-gradient(#FF8FAB 15%, transparent 16%);
+  background-size: 60px 60px;
+  background-position: 0 0, 30px 30px;
+  opacity: 0.1;
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}

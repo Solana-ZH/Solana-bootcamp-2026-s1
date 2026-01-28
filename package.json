@@ -1,0 +1,23 @@
+{
+  "name": "solana-bootcamp-2026-s1",
+  "version": "1.0.0",
+  "description": "<div align=\"center\">",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/StudiousXiaoYu/Solana-bootcamp-2026-s1.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/StudiousXiaoYu/Solana-bootcamp-2026-s1/issues"
+  },
+  "homepage": "https://github.com/StudiousXiaoYu/Solana-bootcamp-2026-s1#readme",
+  "dependencies": {
+    "bs58": "^6.0.0"
+  }
+}

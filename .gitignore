@@ -1,0 +1,45 @@
+.anchor
+.DS_Store
+target
+**/*.rs.bk
+node_modules
+test-ledger
+.yarn
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Local env (secrets)
+.env
+.env.*
+!.env.example
+!.env.sample
+
+# Next.js / Node build artifacts
+.next/
+out/
+dist/
+build/
+coverage/
+.turbo/
+.vercel/
+.swc/
+.eslintcache
+.parcel-cache/
+
+# Editor / OS
+.vscode/
+.idea/
+*.iml
+Thumbs.db
+Desktop.ini
+
+# Solana / Anchor keypairs (never commit)
+**/*-keypair.json
+**/*keypair.json
+.trae/

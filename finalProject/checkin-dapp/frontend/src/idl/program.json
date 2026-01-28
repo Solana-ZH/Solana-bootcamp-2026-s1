@@ -1,0 +1,136 @@
+{
+  "address": "B5Zjd3jeSG45nRbbBJqAttHm7aVBFERuGXJv9Pm4WXpd",
+  "metadata": {
+    "name": "checkin_program",
+    "version": "0.1.0",
+    "spec": "0.1.0",
+    "description": "Created with Anchor"
+  },
+  "instructions": [
+    {
+      "name": "check_in",
+      "discriminator": [209, 253, 4, 217, 250, 241, 207, 50],
+      "accounts": [
+        {
+          "name": "authority",
+          "writable": true,
+          "signer": true,
+          "relations": ["user_checkin"]
+        },
+        {
+          "name": "user_checkin",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [117, 115, 101, 114, 95, 99, 104, 101, 99, 107, 105, 110]
+              },
+              { "kind": "account", "path": "authority" }
+            ]
+          }
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "claim_badge",
+      "docs": ["达到阈值后领取徽章 NFT（每用户每等级唯一，禁止重复领取）。"],
+      "discriminator": [111, 30, 18, 17, 228, 252, 239, 102],
+      "accounts": [
+        {
+          "name": "authority",
+          "writable": true,
+          "signer": true,
+          "relations": ["user_checkin"]
+        },
+        {
+          "name": "user_checkin",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [117, 115, 101, 114, 95, 99, 104, 101, 99, 107, 105, 110]
+              },
+              { "kind": "account", "path": "authority" }
+            ]
+          }
+        },
+        {
+          "name": "user_badges",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [117, 115, 101, 114, 95, 98, 97, 100, 103, 101, 115]
+              },
+              { "kind": "account", "path": "authority" }
+            ]
+          }
+        },
+        { "name": "system_program", "address": "11111111111111111111111111111111" }
+      ],
+      "args": [{ "name": "level", "type": "u8" }]
+    },
+    {
+      "name": "initialize_user",
+      "discriminator": [111, 17, 185, 250, 60, 122, 38, 254],
+      "accounts": [
+        { "name": "authority", "writable": true, "signer": true },
+        {
+          "name": "user_checkin",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [117, 115, 101, 114, 95, 99, 104, 101, 99, 107, 105, 110]
+              },
+              { "kind": "account", "path": "authority" }
+            ]
+          }
+        },
+        { "name": "system_program", "address": "11111111111111111111111111111111" }
+      ],
+      "args": []
+    }
+  ],
+  "accounts": [
+    { "name": "UserBadges", "discriminator": [90, 12, 46, 138, 175, 155, 176, 190] },
+    { "name": "UserCheckin", "discriminator": [189, 127, 89, 157, 162, 26, 18, 243] }
+  ],
+  "errors": [
+    { "code": 6000, "name": "AlreadyCheckedInToday", "msg": "今天已经打过卡啦！明天再来吧~" },
+    { "code": 6001, "name": "InvalidBadgeLevel", "msg": "徽章等级不合法" },
+    { "code": 6002, "name": "NotEnoughCheckins", "msg": "累计打卡次数不足，暂不可领取该徽章" },
+    { "code": 6003, "name": "BadgeAlreadyClaimed", "msg": "该徽章已领取，不能重复领取" }
+  ],
+  "types": [
+    {
+      "name": "UserBadges",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          { "name": "authority", "type": "pubkey" },
+          { "name": "claimed_mask", "type": "u32" },
+          { "name": "bump", "type": "u8" }
+        ]
+      }
+    },
+    {
+      "name": "UserCheckin",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          { "name": "authority", "type": "pubkey" },
+          { "name": "total_checkins", "type": "u32" },
+          { "name": "last_checkin_day", "type": "i64" },
+          { "name": "streak", "type": "u16" },
+          { "name": "bump", "type": "u8" }
+        ]
+      }
+    }
+  ]
+}
