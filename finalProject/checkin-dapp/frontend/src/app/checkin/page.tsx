@@ -4,7 +4,6 @@ import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { useAnchorWallet, useConnection, useWallet } from "@solana/wallet-adapter-react";
-import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 import { mockCheckInService, CheckInStats, Badge, type CheckInService } from "@/lib/mock/checkin-service";
 import { createAnchorCheckInService } from "@/lib/solana/anchor-checkin-service";
 import { getSolanaFrontendConfig } from "@/lib/solana/env";
@@ -13,6 +12,7 @@ import { StatsDisplay } from "@/components/features/StatsDisplay";
 import { BadgeGrid } from "@/components/features/BadgeGrid";
 import { CheckInHistory } from "@/components/features/CheckInHistory";
 import { CartoonButton } from "@/components/ui/CartoonButton";
+import { WalletMultiButtonClient } from "@/components/solana/WalletMultiButtonClient";
 
 export default function CheckinPage() {
   const { publicKey } = useWallet();
@@ -161,7 +161,7 @@ export default function CheckinPage() {
               <ArrowLeft className="w-4 h-4" /> 返回
             </CartoonButton>
           </Link>
-          <WalletMultiButton className="!bg-white !text-brand-dark !border-3 !border-brand-dark !rounded-xl !shadow-cartoon-sm !font-bold !text-sm" />
+          <WalletMultiButtonClient className="!bg-white !text-brand-dark !border-3 !border-brand-dark !rounded-xl !shadow-cartoon-sm !font-bold !text-sm" />
         </header>
 
         {/* Hero Section */}
@@ -176,8 +176,8 @@ export default function CheckinPage() {
                {!address
                  ? "请先连接钱包再开始打卡～"
                  : stats.canCheckIn
-                   ? "今天还没有打卡哦！"
-                   : "今天已经完成任务啦，明天继续！"}
+                   ? "今天还没有领游戏币哦！"
+                   : "今日次数已领，快去抓娃娃吧！"}
              </p>
           </div>
           

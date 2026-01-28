@@ -1,143 +1,103 @@
-# finalProject 启动说明（Check-in DApp）
+# Solana 幸运抓娃娃 (Solana Lucky Claw Machine)
 
-本目录下的最终项目为 `checkin-dapp`，包含：
-- `frontend/`：Next.js 前端（当前默认使用 Mock 数据即可运行）
-- `program/`：Solana 智能合约（Anchor）
+> 🧸 每日打卡领币，挑战抓娃娃机，赢取珍稀 Solana NFT！
 
-## 目录结构
+## 💻 项目 Repo
 
-```
-finalProject/
-  checkin-dapp/
-    frontend/          # Next.js 前端
-    program/           # Anchor 合约工程
-```
+https://github.com/StudiousXiaoYu/Solana-bootcamp-2026-s1
 
-## 环境准备
+## 📌 项目简介
 
-### 仅启动前端（推荐先跑通）
-- Node.js：建议 18+（已使用 Next.js 14）
-- npm：用于安装依赖与启动开发服务器
+**Solana 幸运抓娃娃** 是一个结合了 **链上打卡** 与 **休闲游戏** 的趣味 DApp。
 
-### 启动合约（可选）
-如果你需要在本地链部署/测试合约，额外需要：
-- Rust：仓库内指定 `rust-toolchain.toml`（Rust 1.89.0）
-- Solana CLI
-- Anchor CLI（与依赖版本匹配，项目依赖 `@coral-xyz/anchor@0.32.1`）
-- Yarn（合约侧 `Anchor.toml` 指定 `package_manager = "yarn"`）
+在这个应用中，"打卡"不再是枯燥的任务，而是获取游戏资源的途径。用户通过每日在 Solana 链上签到，领取“游戏币”，然后使用游戏币操作抓娃娃机。抓到的娃娃将作为 NFT 徽章收藏在用户的展示柜中。
 
-说明：合约工具链在原生 Windows 上配置成本较高，更推荐使用 WSL2（Ubuntu）来完成 Solana/Anchor 相关工作；前端可直接在 Windows 运行。
+项目旨在探索 **GameFi + 社交留存** 的新模式：通过游戏化的方式提高用户每日活跃度。
 
-## 快速启动（前端 Mock 模式）
+## 🌟 核心功能
 
-前端当前页面使用 Mock 服务（本地 localStorage）即可体验打卡与徽章展示，不依赖链上合约。
+1.  **🕹️ 幸运抓娃娃机**
+    *   基于 React 实现的互动抓娃娃小游戏。
+    *   真实的物理反馈与抓取动画。
+    *   包含多种稀有度的娃娃（普通、稀有、史诗、传说）。
 
-1) 进入前端目录
+2.  **📅 链上打卡系统**
+    *   基于 Anchor 开发的智能合约。
+    *   记录用户每日打卡状态与连续打卡天数（Streak）。
+    *   打卡即送“游戏币”，连续打卡可获得额外幸运加成。
+
+3.  **🏆 NFT 成就徽章**
+    *   抓到的娃娃会自动存入用户的“战利品”列表。
+    *   未来规划：将战利品 mint 为链上 NFT。
+
+4.  **⚡️ 双模式体验**
+    *   **Mock 模式**：默认开启。无需安装钱包，直接体验前端交互流程（数据存储在 localStorage）。
+    *   **链上模式**：配置 ProgramId 后，连接 Phantom 钱包，体验真实的 Solana 交互。
+
+## 🛠️ 技术栈
+
+- **智能合约**: Rust + Anchor Framework (@coral-xyz/anchor ^0.32.1)
+- **前端框架**: Next.js 14 (App Router) + TypeScript
+- **样式方案**: Tailwind CSS + CSS Modules (动画效果)
+- **SDK**: @solana/web3.js, @solana/wallet-adapter
+
+## 🚀 快速开始 (本地运行)
+
+### 第一步：启动前端 (推荐)
+
+无需部署合约，直接体验 UI 和游戏逻辑。
 
 ```powershell
+# 进入前端目录
 cd .\finalProject\checkin-dapp\frontend
-```
 
-2) 安装依赖
-
-```powershell
+# 安装依赖
 npm ci
-```
 
-3) 配置环境变量（可选）
-
-Next.js 推荐使用 `.env.local`。项目提供了示例文件 `.env.example`：
-
-```powershell
-copy .env.example .env.local
-```
-
-`NEXT_PUBLIC_PROGRAM_ID` 当前可以留空（前端页面暂未接入链上调用）。
-
-4) 启动开发服务器
-
-```powershell
+# 启动开发服务器
 npm run dev
 ```
 
-5) 打开页面
-- http://localhost:3000/
-- 入口页包含 “Check-in” 页面链接，或直接访问：http://localhost:3000/checkin
+打开浏览器访问：[http://localhost:3000](http://localhost:3000)
 
-## 部署合约到本地链（可选）
+### 第二步：部署合约 (进阶)
 
-本节适用于你希望把合约部署到本地 `localnet` 并进行 Anchor 测试的场景。
+如果你想体验真实的链上交互 (Winodws 用户推荐使用 WSL2)：
 
-1) 进入合约目录
+1.  **启动本地验证器**:
+    ```bash
+    solana-test-validator
+    ```
 
-```bash
-cd finalProject/checkin-dapp/program
-```
+2.  **构建与部署**:
+    ```bash
+    cd finalProject/checkin-dapp/program
+    yarn install
+    anchor build
+    anchor deploy
+    ```
 
-2) 启动本地验证器（新终端窗口执行）
+3.  **获取 Program ID**:
+    部署成功后，终端会显示 Program ID。
 
-```bash
-cd ~/
-solana-test-validator
-```
+4.  **配置前端环境变量**:
+    在 `frontend` 目录下新建或修改 `.env.local` 文件：
+    ```env
+    NEXT_PUBLIC_RPC_URL=http://127.0.0.1:8899
+    NEXT_PUBLIC_PROGRAM_ID=<你的 Program ID>
+    ```
 
-3) 配置 Solana CLI 指向 localnet，并准备钱包
+5.  **重启前端**:
+    重新运行 `npm run dev`，前端将自动检测并切换到链上模式。
 
-```bash
-solana config set --url http://127.0.0.1:8899
-solana-keygen new --outfile ~/.config/solana/id.json
-solana airdrop 2
-```
+## 🎬 截图展示
 
-4) 安装合约侧依赖（Anchor 脚本使用 yarn）
+| 首页 (Home) | 抓娃娃 (Game) | 打卡 |
+|---|---|---|
+| ![首页截图](image.png) | ![游戏截图](image-2.png) |![打卡](image-1.png)|
 
-```bash
-yarn install
-```
+## ✍️ 项目创作者
 
-5) 构建并部署合约
-
-```bash
-anchor build
-anchor deploy
-```
-
-如需运行合约测试（本项目测试用例会调用 `set_last_checkin_day` 指令），请使用：
-
-```bash
-anchor test -- --features test
-```
-
-部署完成后，会输出 Program Id。该项目当前 Program Id 也已在合约代码中固定：
-- `programs/program/src/lib.rs` 中 `declare_id!(...)`
-
-## 让前端连接本地链（可选）
-
-说明：当前前端在“未连接钱包”或“未配置 ProgramId”时会走 Mock；连接钱包且配置 ProgramId 后会走链上调用。
-
-在 `finalProject/checkin-dapp/frontend/.env.local` 中设置：
-
-```env
-NEXT_PUBLIC_RPC_URL=http://127.0.0.1:8899
-NEXT_PUBLIC_PROGRAM_ID=B5Zjd3jeSG45nRbbBJqAttHm7aVBFERuGXJv9Pm4WXpd
-```
-
-然后重启前端：
-
-```powershell
-npm run dev
-```
-
-## 常见问题
-
-### 1) 安装依赖报错或 Node 版本不兼容
-- 确认 Node 在 18+：`node -v`
-- 建议使用 `npm ci`（项目已提供 `package-lock.json`）
-
-### 2) 本地链启动后无法 airdrop
-- 确认 `solana config get` 的 RPC 是否为 `http://127.0.0.1:8899`
-- 确认 `solana-test-validator` 进程正在运行
-
-### 3) Anchor 部署/测试失败
-- 确认 Anchor、Solana CLI、Rust 工具链版本匹配
-- 建议在 WSL2 环境中执行合约相关命令
+1. **昵称**：小雨
+2. **联系方式**：微信：StudiousXiaoYu
+3. **Solana 钱包地址**：45r8M7tvNnRLCvbD8ALJKpj6iEedzZcNBk47JhfPbNhf

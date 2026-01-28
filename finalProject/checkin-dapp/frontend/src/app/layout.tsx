@@ -3,8 +3,8 @@ import "./globals.css";
 import { Providers } from "./providers";
 
 export const metadata = {
-  title: "Check-in DApp",
-  description: "链上打卡 + 成就徽章（NFT）DApp",
+  title: "Solana 幸运抓娃娃 - 每日打卡赢 NFT",
+  description: "Solana 链上抓娃娃机，每日打卡领取游戏币，抓取珍稀 NFT 徽章。",
 };
 
 /**

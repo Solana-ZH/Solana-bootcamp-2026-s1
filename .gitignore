@@ -42,3 +42,4 @@ Desktop.ini
 # Solana / Anchor keypairs (never commit)
 **/*-keypair.json
 **/*keypair.json
+.trae/

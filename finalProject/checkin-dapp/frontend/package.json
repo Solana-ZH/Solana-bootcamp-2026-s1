@@ -15,6 +15,7 @@
     "@solana/wallet-adapter-react-ui": "^0.9.35",
     "@solana/web3.js": "^1.98.0",
     "clsx": "^2.1.1",
+    "date-fns": "^4.1.0",
     "framer-motion": "^12.29.2",
     "lucide-react": "^0.563.0",
     "next": "^14.2.0",
