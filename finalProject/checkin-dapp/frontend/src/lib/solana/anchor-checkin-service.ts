@@ -46,8 +46,23 @@ function isBlockhashNotFoundError(e: unknown): boolean {
   return message.toLowerCase().includes("blockhash not found");
 }
 
+function isProgramNotDeployedError(e: unknown): boolean {
+  const message = String((e as any)?.message ?? e ?? "");
+  return (
+    message.includes("Attempt to load a program that does not exist") ||
+    message.includes("ProgramAccountNotFound") ||
+    message.includes("program account not found") ||
+    message.includes("Program does not exist")
+  );
+}
+
 function toUserFriendlyError(e: unknown): Error {
   if (e instanceof Error && isAlreadyCheckedInTodayError(e)) return e;
+  if (isProgramNotDeployedError(e)) {
+    return new Error(
+      "当前 RPC 上找不到该 Program。请确认：1) 你的前端 RPC 指向本地链（NEXT_PUBLIC_RPC_URL=http://127.0.0.1:8899）；2) solana-test-validator 没有在部署后重启/--reset；3) 重新执行 anchor deploy 并把 ProgramId 同步到前端。"
+    );
+  }
   if (isBlockhashNotFoundError(e)) {
     return new Error(
       "交易预检失败：Blockhash 不存在或已过期。请重新点击打卡，并尽快在钱包里确认；如果你在用本地链，确认 validator 正在运行且没有刚重启。"
@@ -82,7 +97,25 @@ export function createAnchorCheckInService(params: {
   const idlWithAddress = { ...(idl as any), address: params.programId.toBase58() };
   const program = new Program(idlWithAddress as Idl, provider);
 
+  let programAccountChecked = false;
+  async function assertProgramDeployed(): Promise<void> {
+    if (programAccountChecked) return;
+    const info = await params.connection.getAccountInfo(params.programId);
+    if (!info) {
+      throw new Error(
+        `在 RPC(${(params.connection as any)?.rpcEndpoint ?? "unknown"}) 上找不到 ProgramId(${params.programId.toBase58()})。通常是 validator 重启/--reset 后程序丢失，需要重新 anchor deploy。`
+      );
+    }
+    if (!info.executable) {
+      throw new Error(
+        `ProgramId(${params.programId.toBase58()}) 在 RPC 上存在但不是可执行账户（executable=false）。请确认你填的是程序地址而不是普通账户地址。`
+      );
+    }
+    programAccountChecked = true;
+  }
+
   async function fetchUserCheckinAccount(authority: PublicKey) {
+    await assertProgramDeployed();
     const pda = getUserCheckinPda(authority, params.programId);
     try {
       const account = (await (program as any).account.userCheckin.fetch(pda)) as any;
@@ -102,8 +135,8 @@ export function createAnchorCheckInService(params: {
         .initializeUser()
         .accounts({
           authority,
-          userCheckin: pda,
-          systemProgram: SystemProgram.programId,
+          user_checkin: pda,
+          system_program: SystemProgram.programId,
         })
         .rpc();
     });
@@ -117,6 +150,7 @@ export function createAnchorCheckInService(params: {
       return { totalCheckins: 0, streak: 0, lastCheckinTime: null, canCheckIn: false };
     }
 
+    await assertProgramDeployed();
     const { account } = await fetchUserCheckinAccount(authority);
     if (!account) {
       return { totalCheckins: 0, streak: 0, lastCheckinTime: null, canCheckIn: true };
@@ -147,6 +181,7 @@ export function createAnchorCheckInService(params: {
       throw new Error("钱包地址不匹配，请重新连接钱包");
     }
 
+    await assertProgramDeployed();
     const userCheckin = await ensureInitialized(authority);
 
     try {
@@ -155,7 +190,7 @@ export function createAnchorCheckInService(params: {
           .checkIn()
           .accounts({
             authority,
-            userCheckin,
+            user_checkin: userCheckin,
           })
           .rpc();
       });

@@ -1,12 +1,10 @@
-use anchor_lang::prelude::{
-    Account, Clock, Context, InitSpace, Program as AnchorProgram, Pubkey, Result, Signer, System,
-};
+use anchor_lang::prelude::*;
 
-anchor_lang::declare_id!("B5Zjd3jeSG45nRbbBJqAttHm7aVBFERuGXJv9Pm4WXpd");
+anchor_lang::declare_id!("EPFJb4Gbk6C2bVgd96qmPgaSXnR6pnxib7v6UwG7t9NT");
 
 pub const USER_CHECKIN_SEED: &[u8] = b"user_checkin";
 
-#[program]
+#[anchor_lang::program]
 pub mod checkin_program {
     use super::*;
 
@@ -44,6 +42,7 @@ pub mod checkin_program {
         Ok(())
     }
 
+    #[cfg(feature = "test")]
     pub fn set_last_checkin_day(
         ctx: Context<SetLastCheckinDay>,
         last_checkin_day: i64,
@@ -68,7 +67,7 @@ pub struct InitializeUser<'info> {
     )]
     pub user_checkin: Account<'info, UserCheckin>,
 
-    pub system_program: AnchorProgram<'info, System>,
+    pub system_program: Program<'info, System>,
 }
 
 #[derive(Accounts)]
@@ -99,7 +98,7 @@ pub struct SetLastCheckinDay<'info> {
     pub user_checkin: Account<'info, UserCheckin>,
 }
 
-#[account]
+#[anchor_lang::account]
 #[derive(InitSpace)]
 pub struct UserCheckin {
     pub authority: Pubkey,
@@ -109,7 +108,7 @@ pub struct UserCheckin {
     pub bump: u8,
 }
 
-#[error_code]
+#[anchor_lang::error_code]
 pub enum CheckinError {
     #[msg("今天已经打过卡啦！明天再来吧~")]
     AlreadyCheckedInToday,

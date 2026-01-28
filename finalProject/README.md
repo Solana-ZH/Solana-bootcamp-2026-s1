@@ -102,12 +102,18 @@ anchor build
 anchor deploy
 ```
 
+如需运行合约测试（本项目测试用例会调用 `set_last_checkin_day` 指令），请使用：
+
+```bash
+anchor test -- --features test
+```
+
 部署完成后，会输出 Program Id。该项目当前 Program Id 也已在合约代码中固定：
 - `programs/program/src/lib.rs` 中 `declare_id!(...)`
 
 ## 让前端连接本地链（可选）
 
-说明：目前前端页面还在使用 Mock 服务，未实际调用合约；但你可以先把配置准备好，后续接入链上逻辑时可直接使用。
+说明：当前前端在“未连接钱包”或“未配置 ProgramId”时会走 Mock；连接钱包且配置 ProgramId 后会走链上调用。
 
 在 `finalProject/checkin-dapp/frontend/.env.local` 中设置：
 
@@ -135,4 +141,3 @@ npm run dev
 ### 3) Anchor 部署/测试失败
 - 确认 Anchor、Solana CLI、Rust 工具链版本匹配
 - 建议在 WSL2 环境中执行合约相关命令
-

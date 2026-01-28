@@ -74,7 +74,21 @@ export default function CheckinPage() {
     setLoading(true);
     loadData(address)
       .catch(error => {
-        alert(error instanceof Error ? error.message : "加载数据失败");
+        const baseMessage = error instanceof Error ? error.message : String(error ?? "加载数据失败");
+        const programNotFound =
+          baseMessage.includes("Attempt to load a program that does not exist") ||
+          baseMessage.includes("ProgramAccountNotFound") ||
+          baseMessage.toLowerCase().includes("program account not found");
+        const message = programNotFound
+          ? [
+              "当前 RPC 上找不到该 Program（ProgramId 不存在/未部署到这条链）。",
+              `RPC: ${solanaConfig.rpcUrl}`,
+              `ProgramId: ${solanaConfig.programId?.toBase58() ?? "(未配置)"}`,
+              "如果你刚重启/--reset 过 solana-test-validator，需要重新 anchor deploy，并把 deploy 输出的 ProgramId 同步到前端 NEXT_PUBLIC_PROGRAM_ID，然后重启前端。",
+            ].join("\n")
+          : baseMessage;
+        console.error(error);
+        alert(message);
       })
       .finally(() => setLoading(false));
   }, [address, checkInService]);
@@ -90,7 +104,21 @@ export default function CheckinPage() {
       await checkInService.checkIn(address);
       await loadData(address);
     } catch (error) {
-      alert(error instanceof Error ? error.message : "打卡失败");
+      const baseMessage = error instanceof Error ? error.message : String(error ?? "打卡失败");
+      const programNotFound =
+        baseMessage.includes("Attempt to load a program that does not exist") ||
+        baseMessage.includes("ProgramAccountNotFound") ||
+        baseMessage.toLowerCase().includes("program account not found");
+      const message = programNotFound
+        ? [
+            "交易模拟失败：当前 RPC 上找不到该 Program（ProgramId 不存在/未部署到这条链）。",
+            `RPC: ${solanaConfig.rpcUrl}`,
+            `ProgramId: ${solanaConfig.programId?.toBase58() ?? "(未配置)"}`,
+            "请用 anchor deploy 输出的 ProgramId 更新前端 NEXT_PUBLIC_PROGRAM_ID，并重启前端；同时确认 validator 没有在部署后重启/--reset。",
+          ].join("\n")
+        : baseMessage;
+      console.error(error);
+      alert(message);
     } finally {
       setCheckingIn(false);
     }
