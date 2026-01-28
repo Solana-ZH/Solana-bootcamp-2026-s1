@@ -6,6 +6,7 @@ export interface CheckInStats {
 }
 
 export interface Badge {
+  level: number;
   id: string;
   name: string;
   description: string;
@@ -18,15 +19,16 @@ export interface Badge {
 export interface CheckInService {
   getStats(address: string): Promise<CheckInStats>;
   checkIn(address: string): Promise<boolean>;
+  claimBadge(address: string, level: number): Promise<boolean>;
   getHistory(address: string): Promise<{ date: string; checked: boolean }[]>;
   getBadges(address: string): Promise<Badge[]>;
 }
 
 const STORAGE_KEY_PREFIX = "checkin_dapp_";
 const BADGE_THRESHOLDS = [
-  { id: "badge_1", name: "初出茅庐", description: "累计打卡 7 天", threshold: 7, emoji: "🌱" },
-  { id: "badge_2", name: "坚持不懈", description: "累计打卡 21 天", threshold: 21, emoji: "🔥" },
-  { id: "badge_3", name: "打卡大师", description: "累计打卡 30 天", threshold: 30, emoji: "🏆" },
+  { level: 1, id: "badge_1", name: "初出茅庐", description: "累计打卡 1 天", threshold: 1, emoji: "🌱" },
+  { level: 2, id: "badge_2", name: "坚持不懈", description: "累计打卡 21 天", threshold: 21, emoji: "🔥" },
+  { level: 3, id: "badge_3", name: "打卡大师", description: "累计打卡 30 天", threshold: 30, emoji: "🏆" },
 ];
 
 export class MockCheckInService implements CheckInService {
@@ -34,12 +36,23 @@ export class MockCheckInService implements CheckInService {
     return `${STORAGE_KEY_PREFIX}${address}`;
   }
 
-  private getUserData(address: string): { total: number; lastTime: number; history: number[] } {
-    if (typeof window === "undefined") return { total: 0, lastTime: 0, history: [] };
+  private getUserData(address: string): {
+    total: number;
+    lastTime: number;
+    history: number[];
+    claimedMask: number;
+  } {
+    if (typeof window === "undefined") return { total: 0, lastTime: 0, history: [], claimedMask: 0 };
     
     const data = localStorage.getItem(this.getStorageKey(address));
-    if (!data) return { total: 0, lastTime: 0, history: [] };
-    return JSON.parse(data);
+    if (!data) return { total: 0, lastTime: 0, history: [], claimedMask: 0 };
+    const parsed = JSON.parse(data);
+    return {
+      total: Number(parsed?.total ?? 0),
+      lastTime: Number(parsed?.lastTime ?? 0),
+      history: Array.isArray(parsed?.history) ? parsed.history : [],
+      claimedMask: Number(parsed?.claimedMask ?? 0),
+    };
   }
 
   private saveUserData(address: string, data: any) {
@@ -93,6 +106,23 @@ export class MockCheckInService implements CheckInService {
     return true;
   }
 
+  /**
+   * 领取徽章（Mock 版）：达标后置位 claimedMask，防止重复领取。
+   */
+  async claimBadge(address: string, level: number): Promise<boolean> {
+    const data = this.getUserData(address);
+    const badge = BADGE_THRESHOLDS.find((b) => b.level === level);
+    if (!badge) throw new Error("徽章等级不合法");
+    if (data.total < badge.threshold) throw new Error("累计打卡次数不足，暂不可领取该徽章");
+
+    const bit = 1 << (level - 1);
+    if ((data.claimedMask & bit) !== 0) throw new Error("该徽章已领取，不能重复领取");
+
+    data.claimedMask |= bit;
+    this.saveUserData(address, data);
+    return true;
+  }
+
   async getHistory(address: string): Promise<{ date: string; checked: boolean }[]> {
     // 返回最近 7 天的状态
     const data = this.getUserData(address);
@@ -122,13 +152,14 @@ export class MockCheckInService implements CheckInService {
     const data = this.getUserData(address);
     
     return BADGE_THRESHOLDS.map(b => ({
+      level: b.level,
       id: b.id,
       name: b.name,
       description: b.description,
       imageUrl: b.emoji,
       threshold: b.threshold,
       unlocked: data.total >= b.threshold,
-      claimed: false, // Mock 阶段暂时都未领取
+      claimed: (data.claimedMask & (1 << (b.level - 1))) !== 0,
     }));
   }
 }

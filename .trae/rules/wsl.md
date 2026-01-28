@@ -1,3 +1,3 @@
-1：涉及program项目时运行命令都需要打开wsl窗口终端才可以，禁止使用windows的终端执行命令
+1：涉及anchor项目时运行命令都需要打开wsl窗口终端才可以，禁止使用windows的终端执行命令
 2：如果需要sudo权限，yu的用户密码是123456
 3：frontend项目仍使用windows终端执行命令

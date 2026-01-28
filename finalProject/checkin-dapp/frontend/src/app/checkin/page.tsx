@@ -43,6 +43,7 @@ export default function CheckinPage() {
   const [history, setHistory] = useState<{ date: string; checked: boolean }[]>([]);
   const [loading, setLoading] = useState(true);
   const [checkingIn, setCheckingIn] = useState(false);
+  const [claimingLevel, setClaimingLevel] = useState<number | null>(null);
 
   const resetData = () => {
     setStats({
@@ -96,6 +97,7 @@ export default function CheckinPage() {
   const handleCheckIn = async () => {
     if (!address) return;
     if (!stats.canCheckIn) return;
+    if (checkingIn) return;
     setCheckingIn(true);
     try {
       if (checkInService === mockCheckInService) {
@@ -121,6 +123,22 @@ export default function CheckinPage() {
       alert(message);
     } finally {
       setCheckingIn(false);
+    }
+  };
+
+  const handleClaimBadge = async (level: number) => {
+    if (!address) return;
+    if (claimingLevel != null) return;
+    setClaimingLevel(level);
+    try {
+      await checkInService.claimBadge(address, level);
+      await loadData(address);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error ?? "领取失败");
+      console.error(error);
+      alert(message);
+    } finally {
+      setClaimingLevel(null);
     }
   };
 
@@ -174,7 +192,7 @@ export default function CheckinPage() {
           <h2 className="text-2xl font-black text-brand-dark mb-6 flex items-center gap-2">
             <span>🏆</span> 成就徽章
           </h2>
-          <BadgeGrid badges={badges} />
+          <BadgeGrid badges={badges} onClaim={handleClaimBadge} claimingLevel={claimingLevel} />
         </section>
       </div>
     </main>

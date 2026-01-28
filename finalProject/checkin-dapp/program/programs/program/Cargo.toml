@@ -22,7 +22,7 @@ test = []
 
 
 [dependencies]
-anchor-lang = "0.32.1"
+anchor-lang = { version = "0.32.1", features = ["init-if-needed"] }
 
 
 [lints.rust]
