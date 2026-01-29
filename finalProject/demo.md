@@ -27,6 +27,11 @@ Sol-Green 是一个基于 Solana 区块链的去中心化环保行为记录与�
 
 <img width="2816" height="1536" alt="image" src="https://github.com/user-attachments/assets/893b8d5a-896e-4b86-b2ae-29dd71f0aad5" />
 
+### 演示视频
+
+- PART 1 ： [https://github.com/tatehu/Sol-Green/blob/main/assets/Sol%20Green%20Part%201.mov](https://github.com/tatehu/Sol-Green/blob/main/assets/Sol%20Green%20Part%201.mov)
+- PART 2 ： [https://github.com/tatehu/Sol-Green/blob/main/assets/Sol%20Green%20Part%202.mov](https://github.com/tatehu/Sol-Green/blob/main/assets/Sol%20Green%20Part%202.mov)
+
 ### 项目文档
 
 - CN ： https://github.com/tatehu/Sol-Green/blob/main/PROJECT_INTRO_CN.md
